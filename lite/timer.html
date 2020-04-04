@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
+<!-- From https://github.com/48kRAM/jstimer
+-->
 <head>
     <meta charset="UTF-8" />
-    <title>JS Timer</title>
+    <title>CTC Meeting Timer</title>
     <script language="JavaScript">
     var ticks;		// Current slot time remain, in sec
     var elapsed;	// Current slot elapsed, in sec
@@ -14,126 +16,140 @@
     	setTimer(F.userTalk.value*60, F.userQA.value*60);
     }
     function setTimer(talkSecs, qaSecs) {
-	talkTime=talkSecs;
-	qaTime=0;
-	var totalSecs = talkSecs + qaSecs;
-	var autoQA=document.getElementById('autoQA');
-	if (talkSecs>0) {
-	    document.getElementById("mode").innerHTML="Presentation";
-	    talkPart=1;
-	    ticks = talkSecs;
-	} else {
-	    if (qaSecs > 0) {
-		document.getElementById("mode").innerHTML="Question / Answer";
-		talkPart=2;
-		ticks=qaSecs
-	    }
-	}
-	if (qaSecs > 0) {
-	    qaTime = qaSecs;
-	}
-	// Set up progress bars
-	proglen=document.getElementById('progress').clientWidth;
-	presWidth = Math.floor(proglen * (talkTime / totalSecs) );
-	qaWidth = Math.floor(proglen * (qaTime / totalSecs) );
-	document.getElementById('presbar').style.width= presWidth +'px';
-	document.getElementById('qabar').style.width= qaWidth +'px';
-	beginTiming();
+		talkTime=talkSecs;
+		qaTime=0;
+		var totalSecs = talkSecs + qaSecs;
+		var autoQA=document.getElementById('autoQA');
+		if (talkSecs>0) {
+			document.getElementById("mode").innerHTML="Presentation";
+			talkPart=1;
+			ticks = talkSecs;
+		} else {
+			if (qaSecs > 0) {
+			document.getElementById("mode").innerHTML="Question / Answer";
+			talkPart=2;
+			ticks=qaSecs
+			}
+		}
+		if (qaSecs > 0) {
+			qaTime = qaSecs;
+		}
+		// Set up progress bars
+		proglen=document.getElementById('progress').clientWidth;
+		presWidth = Math.floor(proglen * (talkTime / totalSecs) );
+		qaWidth = Math.floor(proglen * (qaTime / totalSecs) );
+		document.getElementById('presbar').style.width= presWidth +'px';
+		document.getElementById('qabar').style.width= qaWidth +'px';
+		beginTiming();
     }
     function beginTiming() {
-	updateDisplay();
-	document.getElementById('gui').style.visibility='hidden';
-	document.getElementById('timer').style.color='#000';
-	document.getElementById("timer").style.fontSize="17em";
-	clearInterval(counter);
-	counter=setInterval(timerFunc, 1000);
+		updateDisplay();
+		document.getElementById('gui').style.visibility='hidden';
+		document.getElementById('timer').style.color='#000';
+		//document.getElementById("timer").style.fontSize="17em";
+		clearInterval(counter);
+		counter=setInterval(timerFunc, 1000);
     }
     function updateDisplay() {
-	var talkLen, presticks, qaticks;
-	var elem=document.getElementById("timer");
+		var talkLen, presticks, qaticks;
+		var elem=document.getElementById("timer");
+		var timeRemainingLabel=document.getElementById("timeRemainingLabel");
 
-	// Construct human-readable time display
-    	var mins=Math.floor(ticks/60 );
-	var secs=ticks-(mins*60);
-	if(secs.toString().length<2) { secs='0'+secs; }
-	elem.innerHTML=mins +":" +secs;
-	divlen=document.getElementById('progress').clientWidth;
-	var pb=document.getElementById('presbar');
-	var qb=document.getElementById('qabar');
-	var qa=document.getElementById('autoQA');
-	proglen=document.getElementById('progress').clientWidth;
+		// Construct human-readable time display
+			var mins=Math.floor(ticks/60 );
+		var secs=ticks-(mins*60);
+		if(secs.toString().length<2) { secs='0'+secs; }
+		if (isNaN(mins) || isNaN(secs) || mins < 0 || secs < 0){
+			elem.innerHTML="<p style='font-size: 10px;font-weight:normal'>No time defined</p>"; 
+			timeRemainingLabel.innerHTML="No time remaining";
+		} else {
+			elem.innerHTML=mins +":" +secs;
+			timeRemainingLabel.innerHTML="Time remaining:";
+		}
+		divlen=document.getElementById('progress').clientWidth;
+		var pb=document.getElementById('presbar');
+		var qb=document.getElementById('qabar');
+		var qa=document.getElementById('autoQA');
+		proglen=document.getElementById('progress').clientWidth;
 
-	if (talkPart == 1) {	// Presentation
-	    presticks=ticks;
-	    qaticks=qaTime;
-	} else {
-	    presticks=0;
-	    qaticks=ticks;
-	}
+		if (talkPart == 1) {	// Presentation
+			presticks=ticks;
+			qaticks=qaTime;
+		} else {
+			presticks=0;
+			qaticks=ticks;
+		}
 
-	// Set inner bar lengths
-	var preslen = Math.floor(proglen * (presticks / (talkTime + qaTime)) );
-	var qalen = Math.floor(proglen * (qaticks / (talkTime + qaTime) ) );
-	pb.style.width = preslen +'px';
-	pb.style.marginLeft = (presWidth - preslen) +'px';
-	qb.style.width = qalen +'px';
-	qb.style.marginLeft = (qaWidth - qalen) +'px';
+		// Set inner bar lengths
+		var preslen = Math.floor(proglen * (presticks / (talkTime + qaTime)) );
+		var qalen = Math.floor(proglen * (qaticks / (talkTime + qaTime) ) );
+		pb.style.width = preslen +'px';
+		pb.style.marginLeft = (presWidth - preslen) +'px';
+		qb.style.width = qalen +'px';
+		qb.style.marginLeft = (qaWidth - qalen) +'px';
     }
     function timerFunc() {
-	ticks=ticks-1;
-	elapsed=elapsed+1;
-	if (ticks <=0 ) {
-	    var x=document.getElementById('autoQA');
-	    if (talkPart==1 && x.checked) {
-		talkPart=2;
-		ticks=qaTime;
-		updateDisplay();
-		document.getElementById("mode").innerHTML="Question / Answer";
-	    } else {
-		updateDisplay();
-		clearInterval(counter);
-		var elem=document.getElementById("timer")
-		elem.style.fontSize="10em";
-		elem.innerHTML="Your time has expired!";
-		document.getElementById("mode").innerHTML="";
-		timeIsUp();
-		counter=setInterval(timeIsUp, 700);
-	    }
-	} else {
-	    updateDisplay();
-	}
+		ticks=ticks-1;
+		elapsed=elapsed+1;
+		if (ticks <=0 ) {
+			var x=document.getElementById('autoQA');
+			if (talkPart==1 && x.checked) {
+			talkPart=2;
+			ticks=qaTime;
+			updateDisplay();
+			document.getElementById("mode").innerHTML="Question / Answer";
+			} else {
+			updateDisplay();
+			clearInterval(counter);
+			var elem=document.getElementById("timer")
+			//elem.style.fontSize="10em";
+			endMsg = document.getElementById("endMsg").value
+			elem.innerHTML="<p style='font-size: 60px'>" + endMsg + "</p>";
+			document.getElementById("mode").innerHTML="";
+			//timeIsUp();
+			//counter=setInterval(timeIsUp, 700);
+			}
+		} else {
+			updateDisplay();
+		}
     }
     function showGui() {
-	document.getElementById('timer').style.color='black';
-	document.getElementById("gui").style.visibility='visible';
-	clearInterval(counter);
+		var isVisible;
+		document.getElementById('timer').style.color='black';
+		isVisible = document.getElementById("gui").style.visibility;
+		if (isVisible == 'visible'){
+			newMode = 'hidden';
+			beginTiming();
+			return;
+		} 
+		document.getElementById("gui").style.visibility='visible';
+		clearInterval(counter);
     }
     function timeIsUp() {
     	var elem=document.getElementById("timer");
-	if (elem.style.color=="black") {
-	    elem.style.color = "red";
-	} else {
-	    elem.style.color = "black";
-	}
+		if (elem.style.color=="black") {
+			elem.style.color = "red";
+		} else {
+			elem.style.color = "black";
+		}
     }
+	function stopProp(){
+		event.stopPropagation();
+	}
     
     </script>
     <style>
-	body { background-color: #eee; color: #000; }
+	body { background-color: #eee; color: #000; color: #000000; font-family: Verdana,Arial,Helvetica,sans-serif;}
 	input[type=button], button {
 		-webkit-appearance: none;
 		width: 100px; padding: 4px;
 		}
 	#mode { text-align: center; height: 100px; font-size: 5em; }
-        #gui { position: absolute; width: 115px; left: 20px;
-                top: 125px; z-index: 3; background-color: #11cc66;
+    #gui { position: absolute; width: 200px; left: 20px;
+                top: 100px; z-index: 3; background-color: #11cc66;
 		padding-left: 12px; padding-top: 5px; padding-bottom: 5px;
-		border-radius: 5px;
+		border-radius: 5px; font-size: 13px;
             }
-        #textdiv { width: 98%; height: 500px; display: table;
-                position: absolute; top: 100px; text-align: center;
-                }
-        #timer { height: 370px; font-size: 17em; text-align: center;}
 	#progress { margin-left: auto; margin-right: auto; width: 70%;
 		border: 1px solid #000; height:20px;
 		background-color: #333; border-radius: 8px;
@@ -148,33 +164,79 @@
 <body onLoad="updateDisplay()">
 
     <div id="gui">
+	<!--
 	<button onClick="setTimer(60,60)">Demo<br/>1 / 1</button>
 	<button onClick="setTimer(15*60,5*60)">Normal talk<br/>15 / 5</button>
 	<button onClick="setTimer(35*60,5*60)">Invited talk<br/>35 / 5</button>
 	<button onClick="setTimer(10,10)">Quick test<br/>:10 / :10</button>
-	<br/><br/>
+	-->
+	<br/>
+	<!--<br/>
 	<hr/>
-	<b>Custom timer: </b> &nbsp;
+	<b>Custom timer: </b> &nbsp;-->
 	<form name="usertime">
-	<input type="text" size="2" name="userTalk"> / <input type="text" size="2" name="userQA">
-	&nbsp;<br/>
+	<table>
+		<tr>
+			<td>
+				<b>Time to count down</b>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="text" size="2" name="userTalk"> min<!--/--> <input type="hidden" value=0 size="2" name="userQA">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b>End message</b>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="text" size="20" id="endMsg" value="Countdown is complete"> 
+			</td>
+		</tr>
+	</table>
 	<input type="button" value="Start timer" onClick="userTimer(this.form)">
 	</form>
 	<hr/>
 	<form name="qaMode">
-	<input type="checkbox" id="autoQA" checked="checked" value="1">
-	    Auto-advance to Q/A
+	<!--<input type="checkbox" id="autoQA" checked="checked" value="1">
+	    Auto-advance to Q/A-->
+	<input type="hidden" id="autoQA" checked="checked" value="1">
 	</form>
 	<button onClick="beginTiming()">Resume countdown</button>
+	<hr/>
+	<p>Notes:</p>
+	<p>- Click on the time to show/hide this box</p>
+	<p>- Click on the area below "Additional Information" to edit the message</p>
     </div>
-
-    <div id="mode">JS Timer</div>
-    <div id="textdiv" onClick="showGui()">
-        <span id="timer" > </span>
-    </div>
-    </div>
-    <div id="progress"><div id="presbar"></div><div id="qabar"></div></div>
+    <div style="display:none" id="mode">JS Timer</div>
+<!----------------------->
+<table>
+	<tbody>
+		<tr>
+			<td width="350"><img src="https://static1.squarespace.com/static/5a078a0c4c0dbf69089e6f58/t/5c3d88a9b8a04558f4dca33a/1585950481953/?format=1500w" alt="" width="254" height="134" /></td>
+			<td>
+				<div style="color: #000000; font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 36px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;"><strong> CTC Event <br /> Countdown Timer </strong></div>
+			</td>
+		</tr>
+		<tr>
+			<td style="width: 400px;">Additional Information:</td>
+			<td ><em style="color: #000000; font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 14px; font-style: italic; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;"><span id="timeRemainingLabel"></span></em></td>
+		</tr>
+		<tr>
+			<td style="width: 400px;"><textarea style="width:250px; border-style: none; background-color: #e6e6e6; font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 14px;" rows="8" columns=40">Enjoy!</textarea></td>
+			<td  onClick="showGui()">
+				<div id="textdiv" >
+					<strong><span id="timer" style="font-size: 160px;">&nbsp;</span></strong>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<!----------------------->	
+    <div id="progress" style="display:none"><div id="presbar" style="display:none"></div><div id="qabar" style="display:none "></div></div>
     
 </body>
 </html>
-
