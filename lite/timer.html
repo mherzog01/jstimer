@@ -43,6 +43,7 @@
 		beginTiming();
     }
     function beginTiming() {
+		document.getElementById("titleText").innerHTML = document.getElementById("titleTextHTML").value;
 		updateDisplay();
 		document.getElementById('gui').style.visibility='hidden';
 		document.getElementById('timer').style.color='#000';
@@ -188,6 +189,16 @@
 		</tr>
 		<tr>
 			<td>
+				<b>Title (HTML OK)</b>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="text" size="20" id="titleTextHTML" value="Time remaining in event"> 
+			</td>
+		</tr>
+		<tr>
+			<td>
 				<b>End message</b>
 			</td>
 		</tr>
@@ -218,7 +229,7 @@
 		<tr>
 			<td width="350"><img src="https://static1.squarespace.com/static/5a078a0c4c0dbf69089e6f58/t/5c3d88a9b8a04558f4dca33a/1585950481953/?format=1500w" alt="" width="254" height="134" /></td>
 			<td>
-				<div style="color: #000000; font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 36px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;"><strong> CTC Event <br /> Countdown Timer </strong></div>
+				<div style="color: #000000; font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 36px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;"><strong></i><span id="titleText"></span> </strong></div>
 			</td>
 		</tr>
 		<tr>
