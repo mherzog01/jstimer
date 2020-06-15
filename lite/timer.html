@@ -29,6 +29,9 @@
 			document.getElementById("mode").innerHTML="Question / Answer";
 			talkPart=2;
 			ticks=qaSecs
+			} else {
+				alert('Please enter a time');
+				return;
 			}
 		}
 		if (qaSecs > 0) {
@@ -184,7 +187,7 @@
 		</tr>
 		<tr>
 			<td>
-				<input type="text" size="2" name="userTalk"> min<!--/--> <input type="hidden" value=0 size="2" name="userQA">
+				<input type="text" size="2" name="userTalk" value=5> min<!--/--> <input type="hidden" value=0 size="2" name="userQA">
 			</td>
 		</tr>
 		<tr>
@@ -194,7 +197,7 @@
 		</tr>
 		<tr>
 			<td>
-				<input type="text" size="20" id="titleTextHTML" value="Time remaining in event"> 
+				<textarea size="20" id="titleTextHTML" rows=5>Time remaining in event</textarea>
 			</td>
 		</tr>
 		<tr>
@@ -233,11 +236,13 @@
 			</td>
 		</tr>
 		<tr>
-			<td style="width: 400px;">Additional Information:</td>
+			<td style="width: 400px;">&nbsp;</td>
 			<td ><em style="color: #000000; font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 14px; font-style: italic; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;"><span id="timeRemainingLabel"></span></em></td>
 		</tr>
 		<tr>
-			<td style="width: 400px;"><textarea style="width:250px; border-style: none; background-color: #e6e6e6; font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 14px;" rows="8" columns=40">Enjoy!</textarea></td>
+			<td style="width: 400px;"><textarea style="color: #000000; background-color: #eee; width:250px; border-style: none; font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 14px;" rows="8" columns=40">
+Additional Notes:
+Enjoy!</textarea></td>
 			<td  onClick="showGui()">
 				<div id="textdiv" >
 					<strong><span id="timer" style="font-size: 160px;">&nbsp;</span></strong>

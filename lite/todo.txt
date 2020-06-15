@@ -1,0 +1,18 @@
+Critical:
+1.  Test and document
+
+Other:
+1.  Make area where enter title larger
+2.  Ability to just show an announcement, no timer
+3.  Make logo soft
+4.  Edit the headline while timer is running
+5.  If change the timer data, keep the timer running
+6.  Create separate GitHub project, not a fork
+7.  Add button to launch in full screen mode
+8.  Ability to Schedule messages as time counts down - e.g. 3 min to go - please start wrapping up
+9.  Ability to play sounds when times are reached/time ends
+10.  Ability to enter entire meeting schedule and count down/track time. 
+11.  Ability to display presentations - make time smaller/unobtrusive
+12.  Github
+- Update Readme
+- Remove unwanted files
